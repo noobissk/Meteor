@@ -15,7 +15,7 @@ public class SpawnEnemies : MonoBehaviour
         if (Enemy1Num != NumberOfEnemies1)
         {
             Vector2 SpawnPos = new Vector2(Random.Range(-25, 25), Random.Range(-25, 25));
-            Instantiate(EnemyBasic, )
+            Instantiate(EnemyBasic);
         }
     }
 }

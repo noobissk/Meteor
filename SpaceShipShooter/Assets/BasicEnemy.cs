@@ -10,7 +10,7 @@ public class BasicEnemy : MonoBehaviour
     [SerializeField] LayerMask EnemyMask;
     float OriginSpeed;
     Transform Player;
-    Vector2 MoveDir;
+    Vector2 MoveDir, SocialDDirection;
     RaycastHit SphereHit;
     Collider2D EnemyC;
     Collider2D AllyC;
@@ -34,27 +34,29 @@ public class BasicEnemy : MonoBehaviour
                 StartAttack = false;
             }
         }
+        AllyC = Physics2D.OverlapCircle(transform.position, SocialDistancing);
+        //EnemyC = Physics2D.OverlapCircle(transform.position, SocialDistancing,);
+
         MoveDir = Player.position - transform.position;
 
         MoveDir.x = Mathf.Clamp(MoveDir.x, -1, 1);
         MoveDir.y = Mathf.Clamp(MoveDir.y, -1, 1);
 
-        Vector2 SocialDDirection = transform.position - AllyC.transform.position;
+        SocialDDirection = transform.position - AllyC.transform.position;
         SocialDDirection.x = Mathf.Clamp(SocialDDirection.x, -1, 1);
         SocialDDirection.y = Mathf.Clamp(SocialDDirection.y, -1, 1);
 
-        AllyC = Physics2D.OverlapCircle(transform.position, SocialDistancing, AllyMask);
-        EnemyC = Physics2D.OverlapCircle(transform.position, SocialDistancing, EnemyMask);
 
-
-        if (EnemyC.transform.CompareTag("Player")) // This doesn't work
+        if (AllyC.gameObject.CompareTag("Player")) // This doesn't work
         {
             StartAttack = true;
+            Debug.Log("PlayerInRAnge");
         }
-        if (AllyC.transform.CompareTag("Enemy")) // learn to use 2D raycasts
-        {
-            RB.AddForce(SocialDDirection, ForceMode2D.Force);
-        }
+        //if (AllyC.gameObject.CompareTag("Enemy")) // learn to use 2D raycasts
+        //{
+        //    Debug.Log("It works");
+        //    RB.AddForce(SocialDDirection * 5, ForceMode2D.Force);
+        //}
         
         
     }
