@@ -17,8 +17,9 @@ public class GoForward : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
+        Debug.Log(collision.transform.name);
         Collider.enabled = false;
-        if (collision.gameObject.GetComponent<Health>())
+        if (collision.gameObject.GetComponent<Health>() && !collision.gameObject.CompareTag("Player"))
         {
             Health Healthscript = collision.gameObject.GetComponent<Health>();
             Healthscript.health -= damage;

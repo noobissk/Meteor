@@ -6,6 +6,7 @@ public class BasicEnemy : MonoBehaviour
 {
     [SerializeField] Rigidbody2D RB;
     [SerializeField] float speed, TurnSpeed, SocialDistancing, AttackTimer = 1, DashAttack;
+    [SerializeField] int MaxTimeToAttack = 5;
     [SerializeField] LayerMask AllyMask;
     [SerializeField] LayerMask EnemyMask;
     float OriginSpeed;
@@ -19,6 +20,7 @@ public class BasicEnemy : MonoBehaviour
     {
         OriginSpeed = speed;
         Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
+        StartCoroutine(StartAttackEnum(Random.Range(0, MaxTimeToAttack)));
     }
 
     
@@ -34,8 +36,13 @@ public class BasicEnemy : MonoBehaviour
                 StartAttack = false;
             }
         }
+
+        if (!StartAttack)
+        {
+            StartCoroutine(StartAttackEnum(Random.Range(0, MaxTimeToAttack)));
+        }
         AllyC = Physics2D.OverlapCircle(transform.position, SocialDistancing);
-        //EnemyC = Physics2D.OverlapCircle(transform.position, SocialDistancing,);
+        EnemyC = Physics2D.OverlapCircle(transform.position, SocialDistancing * 3);
 
         MoveDir = Player.position - transform.position;
 
@@ -46,19 +53,16 @@ public class BasicEnemy : MonoBehaviour
         SocialDDirection.x = Mathf.Clamp(SocialDDirection.x, -1, 1);
         SocialDDirection.y = Mathf.Clamp(SocialDDirection.y, -1, 1);
 
-
-        if (AllyC.gameObject.CompareTag("Player")) // This doesn't work
+        if (AllyC.transform.GetComponent<Collider2D>()) // learn to use 2D raycasts
         {
-            StartAttack = true;
-            Debug.Log("PlayerInRAnge");
+            RB.AddForce(SocialDDirection, ForceMode2D.Force);
         }
-        //if (AllyC.gameObject.CompareTag("Enemy")) // learn to use 2D raycasts
-        //{
-        //    Debug.Log("It works");
-        //    RB.AddForce(SocialDDirection * 5, ForceMode2D.Force);
-        //}
-        
-        
+    }
+
+    IEnumerator StartAttackEnum(int WaitUntilAttack)
+    {
+        yield return new WaitForSeconds(WaitUntilAttack);
+        StartAttack = true;
     }
 
     void FixedUpdate()

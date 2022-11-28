@@ -5,17 +5,22 @@ using UnityEngine;
 public class SpawnEnemies : MonoBehaviour
 {
     [Header("Basic Enemy")]
-    [SerializeField] GameObject EnemyBasic;
-    [SerializeField] int NumberOfEnemies1;
-    int Enemy1Num;
+    [SerializeField] Transform[] EnemySpawnPoints;
+    [SerializeField] GameObject[] EnemyPrefabs;
+    [SerializeField] float EnemySpawnInterval = 3.5f;
 
-    void Update()
+    void Start()
     {
+        StartCoroutine(spawnEnemy(EnemySpawnInterval));
+    }
 
-        if (Enemy1Num != NumberOfEnemies1)
-        {
-            Vector2 SpawnPos = new Vector2(Random.Range(-25, 25), Random.Range(-25, 25));
-            Instantiate(EnemyBasic);
-        }
+    IEnumerator spawnEnemy(float interval)
+    {
+        yield return new WaitForSeconds(interval);
+        int randEnemy = Random.Range(0, EnemyPrefabs.Length);
+        int randSpawnPoint = Random.Range(0, EnemySpawnPoints.Length);
+
+        Instantiate(EnemyPrefabs[0], EnemySpawnPoints[randSpawnPoint].position, transform.rotation);
+        StartCoroutine(spawnEnemy(interval));
     }
 }
