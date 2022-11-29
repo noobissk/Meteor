@@ -29,18 +29,13 @@ public class BigEnemy : MonoBehaviour
     {
         if (StartAttack)
         {
-            Instantiate(Bullet, transform.position, Quaternion.identity);
+            Instantiate(Bullet, transform.position, transform.rotation);
             RB.AddForce(transform.up * -5, ForceMode2D.Impulse);
-            speed = OriginSpeed;
             StartAttack = false;
-        }
-
-        if (!StartAttack)
-        {
             StartCoroutine(StartAttackEnum(TimeToAttack));
         }
+
         AllyC = Physics2D.OverlapCircle(transform.position, SocialDistancing);
-        EnemyC = Physics2D.OverlapCircle(transform.position, SocialDistancing * 3);
 
         MoveDir = Player.position - transform.position;
 
@@ -51,10 +46,6 @@ public class BigEnemy : MonoBehaviour
         SocialDDirection.x = Mathf.Clamp(SocialDDirection.x, -1, 1);
         SocialDDirection.y = Mathf.Clamp(SocialDDirection.y, -1, 1);
 
-        if (AllyC.transform.GetComponent<Collider2D>()) // learn to use 2D raycasts
-        {
-            AllyC.GetComponent<Rigidbody2D>().AddForce(-SocialDDirection, ForceMode2D.Force);
-        }
     }
 
 

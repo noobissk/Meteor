@@ -12,8 +12,6 @@ public class BasicEnemy : MonoBehaviour
     float OriginSpeed;
     Transform Player;
     Vector2 MoveDir, SocialDDirection;
-    RaycastHit SphereHit;
-    Collider2D EnemyC;
     Collider2D AllyC;
     [SerializeField] bool StartAttack;
     void Start()
@@ -42,7 +40,6 @@ public class BasicEnemy : MonoBehaviour
             StartCoroutine(StartAttackEnum(Random.Range(4, MaxTimeToAttack)));
         }
         AllyC = Physics2D.OverlapCircle(transform.position, SocialDistancing);
-        EnemyC = Physics2D.OverlapCircle(transform.position, SocialDistancing * 3);
 
         MoveDir = Player.position - transform.position;
 
@@ -53,7 +50,7 @@ public class BasicEnemy : MonoBehaviour
         SocialDDirection.x = Mathf.Clamp(SocialDDirection.x, -1, 1);
         SocialDDirection.y = Mathf.Clamp(SocialDDirection.y, -1, 1);
 
-        if (AllyC.transform.GetComponent<Collider2D>()) // learn to use 2D raycasts
+        if (AllyC != null) // learn to use 2D raycasts
         {
             RB.AddForce(SocialDDirection, ForceMode2D.Force);
         }

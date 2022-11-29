@@ -1039,6 +1039,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c34e7a6c6be4bd84e8a534adc7329d4c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MaxHealth: 200
+  MaxHealth: 100
   EnemyId: 999
   health: 0
