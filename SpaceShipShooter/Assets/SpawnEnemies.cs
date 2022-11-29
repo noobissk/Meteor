@@ -7,20 +7,28 @@ public class SpawnEnemies : MonoBehaviour
     [Header("Basic Enemy")]
     [SerializeField] Transform[] EnemySpawnPoints;
     [SerializeField] GameObject[] EnemyPrefabs;
-    [SerializeField] float EnemySpawnInterval = 3.5f;
+    [SerializeField] float BasicEnemySpawnInterval = 3.5f, BigEnemySpawnInterval = 8;
+    [SerializeField] int[] MaxEnemies;
+    static public int[] currentEnemies;
 
     void Start()
     {
-        StartCoroutine(spawnEnemy(EnemySpawnInterval));
+        currentEnemies = new int[2];
+        StartCoroutine(spawnEnemy(BasicEnemySpawnInterval, EnemyPrefabs[0], 0));
+        StartCoroutine(spawnEnemy(BigEnemySpawnInterval, EnemyPrefabs[1], 1));
     }
 
-    IEnumerator spawnEnemy(float interval)
+    IEnumerator spawnEnemy(float interval, GameObject Enemy, int EnIdentification)
     {
         yield return new WaitForSeconds(interval);
-        int randEnemy = Random.Range(0, EnemyPrefabs.Length);
         int randSpawnPoint = Random.Range(0, EnemySpawnPoints.Length);
 
-        Instantiate(EnemyPrefabs[0], EnemySpawnPoints[randSpawnPoint].position, transform.rotation);
-        StartCoroutine(spawnEnemy(interval));
+        
+        if (MaxEnemies[EnIdentification] > currentEnemies[EnIdentification])
+        {
+            Instantiate(Enemy, EnemySpawnPoints[randSpawnPoint].position, transform.rotation);
+            currentEnemies[EnIdentification]++;
+        }
+        StartCoroutine(spawnEnemy(interval, Enemy, EnIdentification));
     }
 }

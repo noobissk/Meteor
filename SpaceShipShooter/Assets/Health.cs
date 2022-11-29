@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [SerializeField] int MaxHealth;
+    [SerializeField] int MaxHealth, EnemyId;
     public float health;
     void Start()
     {
@@ -15,6 +15,14 @@ public class Health : MonoBehaviour
     {
         if (health <= 0)
         {
+            if (EnemyId == 0)
+            {
+                SpawnEnemies.currentEnemies[0] -= 1;
+            }
+            else if (EnemyId == 1)
+            {
+                SpawnEnemies.currentEnemies[1] -= 1;
+            }
             Destroy(gameObject);
         }
     }

@@ -15,15 +15,12 @@ public class GoForward : MonoBehaviour
         Destroy(gameObject, BulletLifeTime);
     }
 
-    void OnCollisionEnter2D(Collision2D collision)
+    void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.transform.name);
-        Collider.enabled = false;
-        if (collision.gameObject.GetComponent<Health>() && !collision.gameObject.CompareTag("Player"))
-        {
-            Health Healthscript = collision.gameObject.GetComponent<Health>();
-            Healthscript.health -= damage;
-        }
+        Debug.Log(collision.transform.gameObject.name);
+
+        Health Healthscript = collision.gameObject.GetComponent<Health>();
+        Healthscript.health -= damage;
         Destroy(gameObject, 0);
     }
 }

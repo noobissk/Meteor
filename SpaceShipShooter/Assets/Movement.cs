@@ -7,7 +7,7 @@ public class Movement : MonoBehaviour
     [SerializeField] Rigidbody2D RB;
     [SerializeField] float speed = 10;
     [SerializeField] int dashTimer = 3;
-    float InputV;
+    float InputV, InputH;
     bool CanDash;
 
 
@@ -18,7 +18,8 @@ public class Movement : MonoBehaviour
 
     void FixedUpdate()
     {
-        RB.AddForce(InputV * transform.up * speed, ForceMode2D.Force);
+        RB.AddForce(InputV * Vector2.up * speed, ForceMode2D.Force);
+        RB.AddForce(InputH * Vector2.right * speed, ForceMode2D.Force);
     }
 
 
@@ -27,10 +28,14 @@ public class Movement : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.LeftShift) && CanDash)
         {
             RB.AddForce(transform.up * 5, ForceMode2D.Impulse);
+            Debug.Log("It works??");
             CanDash = false;
             StartCoroutine(DashTimer());
         }
+
+
         InputV = Input.GetAxisRaw("Vertical");
+        InputH = Input.GetAxisRaw("Horizontal");
     }
 
     IEnumerator DashTimer()

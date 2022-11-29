@@ -2,13 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BasicEnemy : MonoBehaviour
+public class BigEnemy : MonoBehaviour
 {
     [SerializeField] Rigidbody2D RB;
-    [SerializeField] float speed, TurnSpeed, SocialDistancing, AttackTimer = 1, DashAttack;
-    [SerializeField] int MaxTimeToAttack = 5;
+    [SerializeField] float speed, SocialDistancing, AttackTimer = 1;
+    [SerializeField] int TimeToAttack = 5;
     [SerializeField] LayerMask AllyMask;
     [SerializeField] LayerMask EnemyMask;
+    [SerializeField] GameObject Bullet;
     float OriginSpeed;
     Transform Player;
     Vector2 MoveDir, SocialDDirection;
@@ -20,26 +21,23 @@ public class BasicEnemy : MonoBehaviour
     {
         OriginSpeed = speed;
         Player = GameObject.FindGameObjectWithTag("Player").GetComponent<Transform>();
-        StartCoroutine(StartAttackEnum(Random.Range(0, MaxTimeToAttack)));
+        StartCoroutine(StartAttackEnum(Random.Range(0, TimeToAttack)));
     }
 
-    
+
     void Update()
     {
         if (StartAttack)
         {
-            speed -= AttackTimer * Time.deltaTime;
-            if (speed <= 3)
-            {
-                RB.AddForce(MoveDir.normalized * DashAttack * 2, ForceMode2D.Impulse);
-                speed = OriginSpeed;
-                StartAttack = false;
-            }
+            Instantiate(Bullet, transform.position, Quaternion.identity);
+            RB.AddForce(transform.up * -5, ForceMode2D.Impulse);
+            speed = OriginSpeed;
+            StartAttack = false;
         }
 
         if (!StartAttack)
         {
-            StartCoroutine(StartAttackEnum(Random.Range(4, MaxTimeToAttack)));
+            StartCoroutine(StartAttackEnum(TimeToAttack));
         }
         AllyC = Physics2D.OverlapCircle(transform.position, SocialDistancing);
         EnemyC = Physics2D.OverlapCircle(transform.position, SocialDistancing * 3);
@@ -48,16 +46,18 @@ public class BasicEnemy : MonoBehaviour
 
         MoveDir.x = Mathf.Clamp(MoveDir.x, -1, 1);
         MoveDir.y = Mathf.Clamp(MoveDir.y, -1, 1);
-
+        
         SocialDDirection = transform.position - AllyC.transform.position;
         SocialDDirection.x = Mathf.Clamp(SocialDDirection.x, -1, 1);
         SocialDDirection.y = Mathf.Clamp(SocialDDirection.y, -1, 1);
 
         if (AllyC.transform.GetComponent<Collider2D>()) // learn to use 2D raycasts
         {
-            RB.AddForce(SocialDDirection, ForceMode2D.Force);
+            AllyC.GetComponent<Rigidbody2D>().AddForce(-SocialDDirection, ForceMode2D.Force);
         }
     }
+
+
 
     IEnumerator StartAttackEnum(int WaitUntilAttack)
     {
@@ -67,8 +67,10 @@ public class BasicEnemy : MonoBehaviour
 
     void FixedUpdate()
     {
+        //Move
         RB.AddForce(MoveDir.normalized * speed);
 
+        //Rotate
         Vector2 TargetPos = Player.position - transform.position;
         TargetPos.Normalize();
         float rot_z = Mathf.Atan2(TargetPos.y, TargetPos.x) * Mathf.Rad2Deg;
