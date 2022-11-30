@@ -7,15 +7,16 @@ public class SpawnEnemies : MonoBehaviour
     [Header("Basic Enemy")]
     [SerializeField] Transform[] EnemySpawnPoints;
     [SerializeField] GameObject[] EnemyPrefabs;
-    [SerializeField] float BasicEnemySpawnInterval = 3.5f, BigEnemySpawnInterval = 8;
+    [SerializeField] float BasicEnemySpawnInterval = 3.5f, BigEnemySpawnInterval = 8, SniperEnemySpawnInterval = 14;
     [SerializeField] int[] MaxEnemies;
     static public int[] currentEnemies;
 
     void Start()
     {
-        currentEnemies = new int[2];
+        currentEnemies = new int[3];
         StartCoroutine(spawnEnemy(BasicEnemySpawnInterval, EnemyPrefabs[0], 0));
         StartCoroutine(spawnEnemy(BigEnemySpawnInterval, EnemyPrefabs[1], 1));
+        StartCoroutine(spawnEnemy(SniperEnemySpawnInterval, EnemyPrefabs[2], 2));
     }
 
     IEnumerator spawnEnemy(float interval, GameObject Enemy, int EnIdentification)

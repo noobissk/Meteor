@@ -1,19 +1,33 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Movement : MonoBehaviour
 {
     [SerializeField] Rigidbody2D RB;
     [SerializeField] float speed = 10;
     [SerializeField] int dashTimer = 3;
+    [SerializeField] Image Dash_RD;
     float InputV, InputH;
-    bool CanDash;
+    [SerializeField] bool CanDash;
 
 
     void Update()
     {
         Inputs();
+        UI();
+    }
+    void UI()
+    {
+        if (CanDash)
+        {
+            Dash_RD.color = Color.green;
+        }
+        else
+        {
+            Dash_RD.color = Color.red;
+        }
     }
 
     void FixedUpdate()
@@ -27,7 +41,7 @@ public class Movement : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.LeftShift) && CanDash)
         {
-            RB.AddForce(transform.up * 5, ForceMode2D.Impulse);
+            RB.AddForce(new Vector2(InputH, InputV) * 10, ForceMode2D.Impulse);
             Debug.Log("It works??");
             CanDash = false;
             StartCoroutine(DashTimer());
@@ -41,5 +55,6 @@ public class Movement : MonoBehaviour
     IEnumerator DashTimer()
     {
         yield return new WaitForSeconds(dashTimer);
+        CanDash = true;
     }
 }

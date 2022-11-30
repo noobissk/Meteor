@@ -17,10 +17,13 @@ public class GoForward : MonoBehaviour
 
     void OnTriggerEnter2D(Collider2D collision)
     {
-        Debug.Log(collision.transform.gameObject.name);
+        //Debug.Log(collision.transform.gameObject.name);
 
-        Health Healthscript = collision.gameObject.GetComponent<Health>();
-        Healthscript.health -= damage;
-        Destroy(gameObject, 0);
+        if (collision.GetComponent<Health>())
+        {
+            Health Healthscript = collision.gameObject.GetComponent<Health>();
+            Healthscript.health -= damage;
+            Destroy(gameObject, 0);
+        }
     }
 }
