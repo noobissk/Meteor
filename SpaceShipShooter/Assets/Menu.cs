@@ -48,7 +48,9 @@ public class Menu : MonoBehaviour
     public void RestartGame01()
     {
         IsPaused = false;
-        SceneManager.LoadScene(Level1ID);
+        score = 0;
         PauseMenu.SetActive(false);
+        SceneManager.LoadScene(Level1ID);
+
     }
 }
